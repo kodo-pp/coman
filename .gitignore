@@ -1,0 +1,11 @@
+*.egg
+*.egg-info
+*.o
+*.pyc
+*.pyd
+*.pyo
+*.so
+*.whl
+*_cache
+.eggs
+__pycache__
