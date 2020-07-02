@@ -9,4 +9,5 @@ setup(
     author_email        = 'sahhash33@gmail.com',
     license             = 'GPL',
     packages            = find_packages(),
+    package_data        = {'coman': ['py.typed']},
 )
