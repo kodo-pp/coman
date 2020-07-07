@@ -15,18 +15,14 @@ def make_functions(arr, em):
         arr.append(('quux', event))
         em.subscribe(event=42, subscriber=baz)
 
-    return {'foo': foo, 'bar': bar, 'baz': baz, 'quux': quux}
+    return foo, bar, baz, quux
 
 
 def test_subscribe():
     arr = []
     em = EventManager()
 
-    funcs = make_functions(arr, em)
-    foo = funcs['foo']
-    bar = funcs['bar']
-    baz = funcs['baz']
-    quux = funcs['quux']
+    foo, bar, baz, quux = make_functions(arr, em)
 
     em.subscribe(event='test_event_1', subscriber=foo)
     em.subscribe(event=42, subscriber=bar)
