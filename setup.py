@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name                = 'coman',
-    version             = '1.0.0',
+    version             = '1.0.1',
     description         = 'A simple coroutine manager',
     author              = 'Alexander Korzun',
     author_email        = 'sahhash33@gmail.com',
