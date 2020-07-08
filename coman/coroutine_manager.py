@@ -67,6 +67,7 @@ class CoroutineManager:
 
         def increase_completed(event: Event) -> None:
             del event
+            nonlocal num_completed
             num_completed += 1
 
         for event in completion_events:
