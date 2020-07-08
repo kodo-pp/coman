@@ -2,9 +2,6 @@ from functools import total_ordering
 from typing import Union, cast
 
 
-ComparisonResult = Union[bool, NotImplemented]
-
-
 @total_ordering
 class FutureTimePoint:
     def __init__(self, time_tracker: 'TimeTracker', time_point: float):
@@ -18,20 +15,21 @@ class FutureTimePoint:
         return self._time_tracker.elapsed_time() >= self._time_point
 
     def __eq__(self, other: object) -> bool:
-        if not self._is_comparable(other):
-            return NotImplemented
+        self._check_comparability(other)
         # Mypy cannot infer that `other` is an instance of FutureTimePoint at this point.
         other = cast(FutureTimePoint, other)
         return self._time_point == other._time_point
 
-    def __lt__(self, other: object) -> ComparisonResult:
-        if not self._is_comparable(other):
-            return NotImplemented
+    def __lt__(self, other: object) -> bool:
+        self._check_comparability(other)
         other = cast(FutureTimePoint, other)
         return self._time_point < other._time_point
 
-    def _is_comparable(self, other: object) -> ComparisonResult:
-        return isinstance(other, FutureTimePoint) and self._time_tracker is other._time_tracker
+    def _check_comparability(self, other: object) -> None:
+        if not isinstance(other, FutureTimePoint):
+            raise TypeError(f'Cannot compare a FutureTimePoint with a(n) {type(other).__name__}')
+        if self._time_tracker is not other._time_tracker:
+            raise ValueError(f'Cannot compare two FutureTimePoint\'s belonging to different time trackers')
 
 
 class TimeTracker:
