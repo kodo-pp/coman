@@ -95,3 +95,45 @@ def test_wait_for_event_multiple_coroutines():
     assert set(arr) == {1, 2, 3, 4, 5, 6}
     cm.event_manager.raise_event('b')
     assert set(arr) == {1, 2, 3, 4, 5, 6}
+
+
+def test_sleep():
+    cm = CoroutineManager()
+    arr = []
+
+    async def foo():
+        arr.append(1)
+        await cm.sleep(2)   # 2
+        arr.append(2)
+        await cm.sleep(5)   # 7
+        arr.append(3)
+
+    async def bar():
+        arr.append(4)
+        await cm.sleep(3)   # 3
+        arr.append(5)
+        await cm.sleep(1)   # 4
+        arr.append(6)
+        await cm.sleep(10)  # 14
+        arr.append(7)
+
+    cm.start(foo())
+    cm.start(bar())
+
+    assert arr == [1, 4]
+    cm.update(1)  # 1
+    assert arr == [1, 4]
+    cm.update(1)  # 2
+    assert arr == [1, 4, 2]
+    cm.update(1)  # 3
+    assert arr == [1, 4, 2, 5]
+    cm.update(1)  # 4
+    assert arr == [1, 4, 2, 5, 6]
+    cm.update(1)  # 5
+    assert arr == [1, 4, 2, 5, 6]
+    cm.update(2)  # 7
+    assert arr == [1, 4, 2, 5, 6, 3]
+    cm.update(6)  # 13
+    assert arr == [1, 4, 2, 5, 6, 3]
+    cm.update(1)  # 14
+    assert arr == [1, 4, 2, 5, 6, 3, 7]
